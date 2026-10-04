@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.streamlit/secrets.toml
+uploads/*
+!uploads/.gitkeep
+vector_db/*
+!vector_db/.gitkeep
+data/state.json
