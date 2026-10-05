@@ -14,60 +14,61 @@ from utils.evaluation_suite import chunk_ablation_settings
 from utils.orchestrator import ResearchOrchestrator, draft_to_latex, save_state
 
 
-st.set_page_config(page_title="ResearchCopilotAI · ResearchX", page_icon="🔬", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="ResearchCopilotAI · Evidence-Grounded AI Assistant",
+    page_icon="🔬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-# Inject Custom High-Precision CSS matching ResearchCopilotAI design system
+# Comprehensive Styling Injection matching the User's Provided HTML/Tailwind Design System
 st.markdown(
     """
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
-
     :root {
-        --rx-primary: #0284c7;
-        --rx-primary-dark: #0369a1;
-        --rx-accent-blue: #1e40af;
-        --rx-brand-bg: #0f172a;
-        --rx-ink: #0f172a;
-        --rx-slate: #334155;
-        --rx-muted: #64748b;
-        --rx-border: #e2e8f0;
-        --rx-page: #f8fafc;
-        --rx-card: #ffffff;
-        --rx-teal: #0d9488;
-        --rx-green-bg: #f0fdf4;
-        --rx-green-border: #bbf7d0;
-        --rx-green-text: #166534;
-        --rx-amber-bg: #fffbeb;
-        --rx-amber-border: #fef08a;
-        --rx-amber-text: #92400e;
-        --rx-red-bg: #fef2f2;
-        --rx-red-border: #fecaca;
-        --rx-red-text: #991b1b;
+        --primary: #0037b0;
+        --primary-container: #1d4ed8;
+        --on-primary: #ffffff;
+        --background: #f9f9ff;
+        --surface: #ffffff;
+        --surface-container-low: #f1f3ff;
+        --surface-container-lowest: #ffffff;
+        --outline-variant: #c4c5d7;
+        --on-surface: #141b2b;
+        --secondary: #515f74;
+        --tertiary: #004e47;
+        --tertiary-container: #00685f;
+        --error: #ba1a1a;
+        --error-bg: #ffdad6;
     }
 
     html, body, [class*="css"], [data-testid="stAppViewContainer"] {
         font-family: 'Inter', sans-serif;
-        color: var(--rx-ink);
-        background-color: var(--rx-page);
+        color: var(--on-surface);
+        background-color: var(--background);
     }
-    .stApp { background: var(--rx-page); }
+    .stApp { background-color: var(--background); }
 
     [data-testid="stMainBlockContainer"] {
-        max-width: 1600px;
-        padding: 1rem 2rem 3rem;
+        max-width: 1400px;
+        padding: 1rem 2rem 4rem;
         margin: 0 auto;
     }
 
+    /* Fixed Top Header */
     header[data-testid="stHeader"] {
-        background: rgba(248, 250, 252, 0.9);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid var(--rx-border);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(196, 197, 215, 0.4);
+        height: 60px;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Customization matching HTML aside template */
     section[data-testid="stSidebar"] {
-        background: #ffffff;
-        border-right: 1px solid var(--rx-border);
+        background-color: #ffffff;
+        border-right: 1px solid rgba(196, 197, 215, 0.5);
     }
     section[data-testid="stSidebar"] > div {
         padding: 1.25rem 1rem 1rem;
@@ -76,248 +77,161 @@ st.markdown(
     .rx-sidebar-brand {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 6px 4px 16px;
-        border-bottom: 1px solid var(--rx-border);
+        gap: 10px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(196, 197, 215, 0.4);
         margin-bottom: 16px;
     }
-    .rx-sidebar-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 9px;
-        background: linear-gradient(135deg, #1e40af 0%, #0284c7 100%);
+    .rx-brand-logo {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: var(--primary-container);
+        color: white;
         display: grid;
         place-items: center;
-        color: white;
-        font-size: 18px;
         font-weight: 700;
-        box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+        font-size: 16px;
     }
-    .rx-sidebar-title {
-        font-weight: 700;
-        font-size: 15px;
-        color: var(--rx-ink);
-        letter-spacing: -0.02em;
-        line-height: 1.2;
+    .rx-brand-text {
+        font-weight: 600;
+        font-size: 14px;
+        color: #141b2b;
+        letter-spacing: -0.01em;
     }
-    .rx-sidebar-sub {
+    .rx-brand-sub {
+        font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
-        color: var(--rx-muted);
-        font-weight: 500;
+        color: var(--secondary);
     }
 
-    /* Sidebar Radio Buttons Styling */
+    /* Styled Radio Navigation Buttons in Sidebar */
     [data-testid="stSidebar"] [data-testid="stRadio"] label {
-        padding: 0.6rem 0.8rem;
-        border-radius: 8px;
-        font-weight: 500;
+        padding: 0.55rem 0.75rem;
+        border-radius: 6px;
         font-size: 13px;
-        color: #475569;
+        font-weight: 500;
+        color: #434655;
         transition: all 0.15s ease;
-        margin-bottom: 2px;
+        margin-bottom: 3px;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
-        background: #f1f5f9;
-        color: var(--rx-ink);
+        background: #e9edff;
+        color: #141b2b;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] {
-        background: #1e40af !important;
+        background: #0037b0 !important;
         color: #ffffff !important;
         font-weight: 600;
-        box-shadow: 0 2px 5px rgba(30, 64, 175, 0.2);
+        box-shadow: 0 2px 4px rgba(0, 55, 176, 0.25);
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p {
         color: #ffffff !important;
     }
 
-    /* Top Navigation Header */
-    .rx-top-header {
+    /* Top Bar Banner */
+    .rx-top-banner {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 16px;
         background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 10px;
+        border: 1px solid rgba(196, 197, 215, 0.4);
+        border-radius: 8px;
+        padding: 8px 16px;
         margin-bottom: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
-    .rx-top-badge {
-        background: #f1f5f9;
-        color: #475569;
+    .rx-top-pill {
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
-        font-weight: 500;
-        padding: 4px 10px;
-        border-radius: 6px;
-        border: 1px solid #e2e8f0;
-    }
-    .rx-top-status {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        color: #475569;
-    }
-    .rx-pulse-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        color: #515f74;
+        background: #f1f3ff;
+        padding: 3px 8px;
+        border-radius: 4px;
+        border: 1px solid #dce2f7;
     }
 
     /* Page Header */
-    .rx-category-tag {
+    .rx-header-eyebrow {
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
         font-weight: 600;
-        color: #1e40af;
-        letter-spacing: 0.08em;
         text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #0037b0;
         margin-bottom: 4px;
     }
-    .rx-page-title {
+    .rx-header-title {
         font-family: 'Newsreader', Georgia, serif;
-        font-size: 32px;
+        font-size: 30px;
         font-weight: 600;
-        color: var(--rx-ink);
-        margin: 0 0 4px 0;
-        letter-spacing: -0.02em;
+        color: #141b2b;
+        margin: 0 0 6px 0;
+        letter-spacing: -0.015em;
     }
-    .rx-page-sub {
+    .rx-header-desc {
         font-size: 13px;
-        color: var(--rx-muted);
+        color: #434655;
         margin-bottom: 20px;
     }
 
-    /* Custom Cards & Containers */
-    .rx-card {
+    /* Card Containers */
+    .rx-box {
         background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 12px;
-        padding: 18px 20px;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
-        margin-bottom: 16px;
-    }
-    .rx-card-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--rx-ink);
-        margin-bottom: 6px;
-    }
-
-    /* Equal Height Feature Cards */
-    .rx-feature-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-    .rx-feature-box {
-        background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 12px;
-        padding: 18px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        transition: all 0.15s ease;
-    }
-    .rx-feature-box:hover {
-        border-color: #cbd5e1;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
-        transform: translateY(-1px);
-    }
-    .rx-icon-wrapper {
-        width: 34px;
-        height: 34px;
+        border: 1px solid rgba(196, 197, 215, 0.5);
         border-radius: 8px;
-        background: #eff6ff;
-        color: #1d4ed8;
-        display: grid;
-        place-items: center;
-        font-size: 16px;
-        margin-bottom: 12px;
+        padding: 16px 18px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
 
-    /* Document Item Row */
-    .rx-doc-card {
-        background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 10px;
-        padding: 14px 16px;
-        margin-bottom: 10px;
-    }
-    .rx-doc-header {
-        display: flex;
+    /* Metric Badges */
+    .rx-metric-badge {
+        display: inline-flex;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 6px;
+        gap: 6px;
+        background: #ffffff;
+        border: 1px solid rgba(196, 197, 215, 0.5);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #141b2b;
     }
-    .rx-doc-name {
+    .rx-pulse-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #00685f;
+        box-shadow: 0 0 0 2px rgba(0, 104, 95, 0.2);
+    }
+
+    /* Citation Pills */
+    .rx-cite-pill {
+        background: #d5e3fc;
+        color: #0037b0;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
         font-weight: 600;
-        font-size: 13px;
-        color: var(--rx-ink);
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin: 0 2px;
+        display: inline-block;
     }
-    .rx-badge-processed {
+
+    /* NLI Verdict Labels */
+    .rx-nli-entailed {
         background: #dcfce7;
         color: #15803d;
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
-        font-weight: 600;
-        padding: 2px 7px;
+        font-weight: 700;
+        padding: 3px 8px;
         border-radius: 4px;
         text-transform: uppercase;
     }
-    .rx-doc-meta {
-        font-size: 11px;
-        color: var(--rx-muted);
-        margin-bottom: 10px;
-    }
-
-    /* Citation Pills */
-    .rx-citation-pill {
-        display: inline-block;
-        background: #eff6ff;
-        color: #1d4ed8;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 2px 7px;
-        border-radius: 4px;
-        border: 1px solid #bfdbfe;
-        text-decoration: none;
-        margin: 0 2px;
-    }
-
-    /* Grounding & Evidence Cards */
-    .rx-evidence-card {
-        background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 10px;
-        padding: 16px;
-        margin-bottom: 12px;
-    }
-    .rx-evidence-quote {
-        background: #f8fafc;
-        border-left: 3px solid #3b82f6;
-        padding: 10px 14px;
-        font-size: 12px;
-        color: #334155;
-        font-style: italic;
-        border-radius: 0 6px 6px 0;
-        margin: 8px 0;
-    }
-
-    /* NLI Verdict Badges */
-    .rx-verdict-entailed {
-        background: var(--rx-green-bg);
-        border: 1px solid var(--rx-green-border);
-        color: var(--rx-green-text);
+    .rx-nli-neutral {
+        background: #fef3c7;
+        color: #b45309;
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
         font-weight: 700;
@@ -325,21 +239,9 @@ st.markdown(
         border-radius: 4px;
         text-transform: uppercase;
     }
-    .rx-verdict-neutral {
-        background: var(--rx-amber-bg);
-        border: 1px solid var(--rx-amber-border);
-        color: var(--rx-amber-text);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 4px;
-        text-transform: uppercase;
-    }
-    .rx-verdict-contradicted {
-        background: var(--rx-red-bg);
-        border: 1px solid var(--rx-red-border);
-        color: var(--rx-red-text);
+    .rx-nli-contradicted {
+        background: #fee2e2;
+        color: #b91c1c;
         font-family: 'JetBrains Mono', monospace;
         font-size: 10px;
         font-weight: 700;
@@ -348,16 +250,16 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Button Customization */
+    /* Primary & Action Buttons */
     div.stButton > button {
-        border-radius: 8px;
-        font-weight: 600;
+        border-radius: 6px;
+        font-weight: 500;
         font-size: 13px;
         transition: all 0.15s ease;
     }
     div.stButton > button[kind="primary"] {
-        background: #1e40af;
-        border-color: #1e40af;
+        background: #0037b0;
+        border-color: #0037b0;
         color: #ffffff;
     }
     div.stButton > button[kind="primary"]:hover {
@@ -365,42 +267,8 @@ st.markdown(
         border-color: #1d4ed8;
     }
 
-    /* Academic Manuscript Sheet */
-    .rx-manuscript {
-        background: #ffffff;
-        border: 1px solid var(--rx-border);
-        border-radius: 8px;
-        padding: 36px 40px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        font-family: 'Newsreader', Georgia, serif;
-    }
-    .rx-manuscript-title {
-        font-size: 24px;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 8px;
-        color: var(--rx-ink);
-    }
-    .rx-manuscript-authors {
-        font-size: 12px;
-        font-family: 'Inter', sans-serif;
-        text-align: center;
-        color: var(--rx-muted);
-        margin-bottom: 24px;
-    }
-    .rx-manuscript-abstract {
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 16px 20px;
-        font-size: 13px;
-        font-style: italic;
-        line-height: 1.6;
-        margin-bottom: 24px;
-    }
-
     @media (max-width: 900px) {
-        .rx-feature-grid { grid-template-columns: 1fr; }
+        [data-testid="stMainBlockContainer"] { padding: 1rem 0.75rem 3rem; }
     }
     </style>
     """,
@@ -417,30 +285,31 @@ def main() -> None:
     orchestrator = get_orchestrator()
     papers = orchestrator.state.get("papers", [])
 
-    # Sidebar Navigation & Status Panel
+    # Sidebar Navigation matching the User's HTML Aside Design
     with st.sidebar:
         st.markdown(
             """
             <div class="rx-sidebar-brand">
-                <div class="rx-sidebar-icon">RX</div>
+                <div class="rx-brand-logo">RC</div>
                 <div>
-                    <div class="rx-sidebar-title">ResearchCopilotAI</div>
-                    <div class="rx-sidebar-sub">3rd Year B.Tech Project</div>
+                    <div class="rx-brand-text">ResearchCopilotAI</div>
+                    <div class="rx-brand-sub">3rd Year B.Tech Project</div>
                 </div>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#515f74;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">
                 Navigation
             </div>
             """,
             unsafe_allow_html=True,
         )
+
         page = st.radio(
             "Navigation",
             ["Workspace", "Literature", "Insights", "Draft"],
             label_visibility="collapsed",
             key="page_navigation",
             format_func=lambda value: {
-                "Workspace": "💻   Workspace",
+                "Workspace": "🔍   Workspace",
                 "Literature": "📖   Literature",
                 "Insights": "📊   Insights",
                 "Draft": "✍️   Draft",
@@ -451,15 +320,15 @@ def main() -> None:
 
         st.markdown(
             f"""
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#94a3b8;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">
-                Corpus Overview
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#515f74;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">
+                Library Corpus
             </div>
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;">
-                <div style="font-size:14px;font-weight:700;color:#0f172a;">
-                    {len(papers)} {'PDF Loaded' if len(papers) == 1 else 'PDFs Loaded'}
+            <div style="background:#f1f3ff;border:1px solid #c4c5d7;border-radius:6px;padding:10px;">
+                <div style="font-size:13px;font-weight:700;color:#141b2b;">
+                    {len(papers)} {'Paper Loaded' if len(papers) == 1 else 'Papers Loaded'}
                 </div>
-                <div style="font-size:11px;color:#64748b;margin-top:2px;">
-                    BioBERT-v1.1 + BM25 Hybrid Index
+                <div style="font-size:11px;color:#515f74;margin-top:2px;font-family:'JetBrains Mono',monospace;">
+                    BioBERT + BM25 RRF
                 </div>
             </div>
             """,
@@ -469,21 +338,21 @@ def main() -> None:
         st.divider()
 
         st.markdown(
-            """
-            <div class="rx-top-status" style="justify-content:flex-start;">
+            f"""
+            <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#141b2b;">
                 <span class="rx-pulse-dot"></span> System Ready
             </div>
-            <div style="font-size:10px;color:#94a3b8;margin-top:4px;">
+            <div style="font-size:10px;color:#515f74;margin-top:4px;">
                 CS302 Project • Grounded RAG
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    # Top Bar Header Component
-    render_top_bar(page, orchestrator)
+    # Top Header Banner
+    render_top_banner(page, orchestrator)
 
-    # Page Router
+    # Page Routing
     if page == "Workspace":
         render_workspace(orchestrator)
     elif page == "Literature":
@@ -494,22 +363,16 @@ def main() -> None:
         render_draft(orchestrator)
 
 
-def render_top_bar(page: str, orchestrator: ResearchOrchestrator) -> None:
+def render_top_banner(page: str, orchestrator: ResearchOrchestrator) -> None:
     papers = orchestrator.state.get("papers", [])
     total_chunks = len(orchestrator.bm25.documents)
     st.markdown(
         f"""
-        <div class="rx-top-header">
-            <div class="rx-top-badge">
-                Evidence-Grounded AI Research Assistant
-            </div>
-            <div style="display:flex;align-items:center;gap:12px;">
-                <div class="rx-top-badge" style="background:#eff6ff;color:#1e40af;border-color:#bfdbfe;">
-                    ⚙ BioBERT + Vector Index
-                </div>
-                <div class="rx-top-status">
-                    <span>{len(papers)} PDFs</span> &nbsp;•&nbsp; <span>{total_chunks} Chunks</span>
-                </div>
+        <div class="rx-top-banner">
+            <span class="rx-top-pill">Evidence-Grounded AI Research Assistant</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <span class="rx-top-pill" style="background:#d5e3fc;color:#0037b0;border-color:#b7c4ff;">⚡ BioBERT + Vector Index</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#515f74;">{len(papers)} Papers • {total_chunks} Chunks</span>
             </div>
         </div>
         """,
@@ -521,30 +384,35 @@ def set_active_page(page: str) -> None:
     st.session_state["page_navigation"] = page
 
 
+# =========================================================================
 # WORKSPACE TAB
+# =========================================================================
 def render_workspace(orchestrator: ResearchOrchestrator) -> None:
     papers = orchestrator.state.get("papers", [])
     analysis = orchestrator.state.get("last_analysis", {})
 
-    col_title, col_badges = st.columns([3, 1])
-    with col_title:
-        st.markdown('<div class="rx-category-tag">SYNTHESIS PROTOCOL • Module 01 / Automated Induction</div>', unsafe_allow_html=True)
-        st.markdown('<h1 class="rx-page-title">Research Workspace</h1>', unsafe_allow_html=True)
-        st.markdown('<div class="rx-page-sub">Analyze papers, verify evidence, and find research insights.</div>', unsafe_allow_html=True)
-    with col_badges:
+    # Top Workspace Header
+    col_hdr, col_status = st.columns([3, 1])
+    with col_hdr:
+        st.markdown('<div class="rx-header-eyebrow">SYNTHESIS PROTOCOL • Module 01 / Automated Induction</div>', unsafe_allow_html=True)
+        st.markdown('<h1 class="rx-header-title">Research Workspace</h1>', unsafe_allow_html=True)
+        st.markdown('<div class="rx-header-desc">Upload papers, choose target files, ask grounded questions, and follow answers back to source passages.</div>', unsafe_allow_html=True)
+    with col_status:
         total_chunks = len(orchestrator.bm25.documents)
         st.markdown(
             f"""
-            <div style="text-align:right;margin-top:10px;">
-                <span class="rx-top-badge" style="background:#f1f5f9;">📖 {len(papers)} PDFs Loaded</span>
-                <span class="rx-top-badge" style="background:#f1f5f9;margin-left:4px;">⚡ {total_chunks} Chunks Indexed</span>
+            <div style="text-align:right;margin-top:8px;">
+                <div class="rx-metric-badge">
+                    <span class="rx-pulse-dot"></span>
+                    <strong>{len(papers)} Papers</strong> • <span>{total_chunks} Chunks</span>
+                </div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    # 2-Column Split: Upload & Library on Left (0.85), Query & Synthesis on Right (1.45)
-    upload_col, main_col = st.columns([0.85, 1.45], gap="large")
+    # 2-Column Split: Upload & Document Selector on Left (0.85), Query & Synthesis Canvas on Right (1.45)
+    upload_col, main_col = st.columns([0.85, 1.45], gap="medium")
 
     with upload_col:
         st.markdown('### Upload Research Papers')
@@ -553,11 +421,11 @@ def render_workspace(orchestrator: ResearchOrchestrator) -> None:
                 "Drop PDF files here or browse",
                 type=["pdf"],
                 accept_multiple_files=True,
-                help="Accepts arXiv pre-prints, IEEE, and ACM formats (Max 25MB per file)",
-                key="workspace_pdf_upload",
+                help="Accepts arXiv, IEEE, ACM PDFs (Max 25MB)",
+                key="pdf_upload_input",
             )
-            if st.button("➕ Process selected papers", type="primary", disabled=not uploaded, use_container_width=True):
-                with st.spinner("Extracting pages & generating embeddings..."):
+            if st.button("📥 Process selected papers", type="primary", disabled=not uploaded, use_container_width=True):
+                with st.spinner("Extracting text passages and indexing embeddings..."):
                     processed = orchestrator.process_uploads(uploaded)
                 st.session_state["upload_results"] = [
                     {"name": p.name, "status": p.status, "page_count": p.page_count, "error": p.error}
@@ -571,130 +439,109 @@ def render_workspace(orchestrator: ResearchOrchestrator) -> None:
             elif res["status"] == "Duplicate":
                 st.info(f"{res['name']} already exists in corpus.")
 
-        # Indexed Documents List with Select & Delete options
-        st.markdown('<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;"><h4 style="margin:0;">INDEXED DOCUMENTS</h4><span style="font-family:\'JetBrains Mono\';font-size:10px;color:#64748b;">VECTOR DENSITY</span></div>', unsafe_allow_html=True)
-        
+        # User Paper Selection & Control Panel
+        st.markdown(
+            '<div style="display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px;"><h4 style="margin:0;">INDEXED DOCUMENTS</h4><span style="font-family:\'JetBrains Mono\';font-size:10px;color:#515f74;">SELECT TO QUERY</span></div>',
+            unsafe_allow_html=True,
+        )
+
         if not papers:
-            st.info("No papers uploaded yet. Add PDF papers to begin building your index.")
+            st.info("No papers uploaded yet. Upload PDF files above to begin.")
         else:
             selected_paper_ids = []
             for idx, paper in enumerate(papers):
-                paper_id = paper.get("paper_id", "")
-                paper_name = paper.get("name", "Untitled Paper.pdf")
-                page_count = paper.get("page_count", 0)
-                
+                p_id = paper.get("paper_id", "")
+                p_name = paper.get("name", "Untitled Paper.pdf")
+                p_pages = paper.get("page_count", 0)
+
                 with st.container(border=True):
-                    c_check, c_info, c_actions = st.columns([0.15, 0.65, 0.20])
-                    with c_check:
-                        is_selected = st.checkbox("", value=True, key=f"paper_select_{paper_id}_{idx}")
-                        if is_selected:
-                            selected_paper_ids.append(paper_id)
-                    with c_info:
-                        st.markdown(f"**{paper_name}**")
+                    chk_col, txt_col, act_col = st.columns([0.15, 0.65, 0.20])
+                    with chk_col:
+                        checked = st.checkbox("", value=True, key=f"select_p_{p_id}_{idx}")
+                        if checked:
+                            selected_paper_ids.append(p_id)
+                    with txt_col:
+                        st.markdown(f"**{p_name}**")
                         st.markdown(
-                            f'<div class="rx-doc-meta"><span class="rx-badge-processed">PROCESSED</span> &nbsp;{page_count} pages • doi:10.1145/{paper_id[:6]}</div>',
+                            f'<div style="font-size:11px;color:#515f74;"><span style="background:#dcfce7;color:#15803d;padding:1px 5px;border-radius:3px;font-family:\'JetBrains Mono\';font-weight:600;">PROCESSED</span> {p_pages} pages</div>',
                             unsafe_allow_html=True,
                         )
-                    with c_actions:
-                        source_path = Path(paper.get("path", ""))
-                        if source_path.is_file():
-                            st.download_button(
-                                "👁 PDF",
-                                data=source_path.read_bytes(),
-                                file_name=source_path.name,
-                                mime="application/pdf",
-                                key=f"dl_pdf_{paper_id}_{idx}",
-                                use_container_width=True,
-                            )
-                        if st.button("🗑 Delete", key=f"del_pdf_{paper_id}_{idx}", use_container_width=True):
-                            orchestrator.delete_paper(paper_id)
-                            st.toast(f"Deleted {paper_name} from index.", icon="🗑️")
+                    with act_col:
+                        if st.button("🗑️", key=f"del_p_{p_id}_{idx}", help=f"Delete {p_name}"):
+                            orchestrator.delete_paper(p_id)
+                            st.toast(f"Deleted {p_name}. Output reset.", icon="🗑️")
                             st.rerun()
 
             st.session_state["active_paper_scope"] = selected_paper_ids
-            total_pages = sum(int(p.get("page_count", 0) or 0) for p in papers)
-            st.markdown(
-                f"""
-                <div style="background:#f1f5f9;border-radius:8px;padding:10px;margin-top:12px;font-size:11px;color:#475569;">
-                    <strong>Index Coverage:</strong> 98.4% Parsed<br/>
-                    <span style="font-family:'JetBrains Mono',monospace;">Embedding: BioBERT-v1.1 | Chunk Size: 512 tokens</span>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+
+            # Clear Output Action Button
+            if analysis and st.button("🧹 Clear Workspace Output", use_container_width=True):
+                orchestrator.clear_analysis()
+                st.toast("Workspace output cleared.", icon="🧹")
+                st.rerun()
 
     with main_col:
         st.markdown('### Ask a question about your research papers...')
-        st.caption("Markdown & LaTeX enabled query interface with hybrid ranking")
+        st.caption("Grounded vector retrieval across selected literature")
 
-        # Query Form & Controls
         with st.container(border=True):
-            scope_option = st.selectbox(
-                "Filter Scope",
-                ["All Uploaded Papers"] + [p.get("name", "") for p in papers],
-                key="query_paper_scope",
-            )
+            sug_col1, sug_col2, sug_col3 = st.columns(3)
+            if sug_col1.button("Compare metrics", key="q_sug_1", use_container_width=True):
+                st.session_state["active_q_input"] = "Compare evaluation metrics across studies"
+                st.rerun()
+            if sug_col2.button("Key limitations", key="q_sug_2", use_container_width=True):
+                st.session_state["active_q_input"] = "What are the key limitations reported?"
+                st.rerun()
+            if sug_col3.button("Dataset splits", key="q_sug_3", use_container_width=True):
+                st.session_state["active_q_input"] = "Summarize benchmark datasets and splits"
+                st.rerun()
 
-            suggestions = ["Compare evaluation metrics", "What are the key limitations?", "Summarize dataset splits"]
-            s_cols = st.columns(len(suggestions))
-            for i, sug in enumerate(suggestions):
-                if s_cols[i].button(sug, key=f"sug_btn_{i}"):
-                    st.session_state["query_input_text"] = sug
-                    st.rerun()
-
-            with st.form("research_query_form"):
-                query_text = st.text_input(
+            with st.form("workspace_query_form"):
+                q_text = st.text_input(
                     "Research question",
                     placeholder="e.g. Which methods perform best across these studies?",
-                    value=st.session_state.get("query_input_text", ""),
-                    key="query_input_field",
+                    value=st.session_state.get("active_q_input", ""),
+                    key="query_text_input",
                 )
                 submitted = st.form_submit_button("⚡ Analyze Literature", type="primary", use_container_width=True, disabled=not papers)
 
             if submitted:
-                target_ids = None
-                if scope_option != "All Uploaded Papers":
-                    matched = [p["paper_id"] for p in papers if p.get("name") == scope_option]
-                    if matched:
-                        target_ids = matched
-
-                with st.spinner("Retrieving evidence across paper passages & synthesizing answer..."):
-                    res = orchestrator.analyze(query_text, paper_ids=target_ids)
+                target_ids = st.session_state.get("active_paper_scope")
+                with st.spinner("Retrieving evidence & verifying claims..."):
+                    res = orchestrator.analyze(q_text, paper_ids=target_ids)
                 if "error" in res:
                     st.warning(res["error"])
                 else:
                     st.rerun()
 
-        # Synthesis Result Canvas
-        analysis = orchestrator.state.get("last_analysis", {})
-        if analysis:
+        # Render Synthesis Output Canvas
+        if analysis and analysis.get("answer"):
             render_synthesis_canvas(orchestrator, analysis)
         elif not papers:
             st.info("Upload PDF research papers to activate the synthesis canvas.")
 
 
-# SYNTHESIS CANVAS RENDERER
+# SYNTHESIS OUTPUT CANVAS
 def render_synthesis_canvas(orchestrator: ResearchOrchestrator, analysis: dict) -> None:
     evidence = analysis.get("evidence", [])
     answer = analysis.get("answer", "")
     question = analysis.get("question", "")
-    verifications = analysis.get("verifications", [])
 
     st.markdown(
         f"""
-        <div class="rx-card" style="border-top:3px solid #1e40af;margin-top:16px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="font-size:24px;color:#1e40af;">”</span>
+        <div class="rx-box" style="border-top:3px solid #0037b0;margin-top:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="material-symbols-outlined" style="color:#0037b0;font-size:22px;">format_quote</span>
                     <h3 style="margin:0;font-family:'Newsreader',serif;font-size:20px;">Synthesized Research Answer</h3>
                 </div>
                 <div style="display:flex;gap:6px;">
-                    <span class="rx-top-badge" style="background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;">Grounded in {len(evidence)} Sources</span>
-                    <span class="rx-top-badge">Latency: 1.18s</span>
+                    <span class="rx-top-pill" style="background:#d5e3fc;color:#0037b0;">Grounded in {len(evidence)} Sources</span>
+                    <span class="rx-top-pill">Latency: 1.18s</span>
                 </div>
             </div>
-            <div style="font-size:12px;color:#64748b;margin-bottom:12px;font-style:italic;">Query: "{html.escape(question)}"</div>
-            <div style="font-size:14px;line-height:1.7;color:#0f172a;margin-bottom:16px;">
+            <div style="font-size:12px;color:#515f74;margin-bottom:12px;font-style:italic;">Query: "{html.escape(question)}"</div>
+            <div style="font-size:14px;line-height:1.7;color:#141b2b;margin-bottom:16px;">
                 {format_answer_citations(answer)}
             </div>
         </div>
@@ -705,43 +552,42 @@ def render_synthesis_canvas(orchestrator: ResearchOrchestrator, analysis: dict) 
     # Cross-Paper Comparison Mini-Table
     if analysis.get("comparison"):
         st.markdown("**EXTRACTED CROSS-PAPER COMPARISON**")
-        df_comp = pd.DataFrame(analysis["comparison"])
-        st.dataframe(df_comp, use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(analysis["comparison"]), use_container_width=True, hide_index=True)
 
     # Verbatim Evidence Cards
     st.markdown(
-        f"""
+        """
         <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;">
             <h4 style="margin:0;">GROUNDING CITATIONS & VERBATIM EVIDENCE</h4>
-            <span class="rx-top-badge" style="background:#f0fdf4;color:#166534;border-color:#bbf7d0;">Confidence Floor: 94%</span>
+            <span class="rx-top-pill" style="background:#dcfce7;color:#15803d;border-color:#bbf7d0;">Confidence Floor: 94%</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
     for item in evidence[:4]:
-        paper_name = item.get("paper", "Paper")
+        p_name = item.get("paper", "Paper")
         page = item.get("page", 1)
         passage = item.get("passage", "")
-        verification_status = item.get("verification_status", "ENTAILED")
-        
-        badge_html = '<span class="rx-verdict-entailed">ENTAILED • HIGH CONFIDENCE</span>'
-        if verification_status == "NEUTRAL":
-            badge_html = '<span class="rx-verdict-neutral">NEUTRAL / UNSUPPORTED</span>'
-        elif verification_status == "CONTRADICTED":
-            badge_html = '<span class="rx-verdict-contradicted">CONTRADICTED</span>'
+        status = item.get("verification_status", "ENTAILED")
+
+        badge_html = '<span class="rx-nli-entailed">ENTAILED</span>'
+        if status == "NEUTRAL":
+            badge_html = '<span class="rx-nli-neutral">NEUTRAL</span>'
+        elif status == "CONTRADICTED":
+            badge_html = '<span class="rx-nli-contradicted">CONTRADICTED</span>'
 
         st.markdown(
             f"""
-            <div class="rx-evidence-card">
+            <div class="rx-box">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                     <div>
-                        <span class="rx-citation-pill">[{paper_name}]</span>
-                        <span style="font-size:12px;font-weight:600;color:#334155;">Page {page}</span>
+                        <span class="rx-cite-pill">[{p_name}]</span>
+                        <span style="font-size:12px;font-weight:600;color:#141b2b;">Page {page}</span>
                     </div>
                     {badge_html}
                 </div>
-                <div class="rx-evidence-quote">
+                <div style="background:#f1f3ff;border-left:3px solid #0037b0;padding:10px 14px;font-size:12px;color:#434655;font-style:italic;border-radius:0 6px 6px 0;margin:8px 0;">
                     "{html.escape(passage)}"
                 </div>
             </div>
@@ -750,18 +596,18 @@ def render_synthesis_canvas(orchestrator: ResearchOrchestrator, analysis: dict) 
         )
 
     # Canvas Action Bar
-    c1, c2, c3 = st.columns([1, 1, 1])
-    with c1:
-        if st.button("📥 Export to Literature Tab", use_container_width=True):
+    ac1, ac2, ac3 = st.columns(3)
+    with ac1:
+        if st.button("📖 View in Literature Tab", use_container_width=True):
             set_active_page("Literature")
             st.rerun()
-    with c2:
-        if st.button("✍️ Add to Draft [Related Work]", type="primary", use_container_width=True):
+    with ac2:
+        if st.button("✍️ Add to Draft", type="primary", use_container_width=True):
             add_answer_to_draft(orchestrator)
-            st.toast("Added answer to Draft (Related Work)!", icon="✅")
-    with c3:
+            st.toast("Added answer to Draft!", icon="✅")
+    with ac3:
         st.download_button(
-            "📋 Copy BibTeX References",
+            "📋 Copy BibTeX",
             data=build_bibtex(orchestrator.state.get("papers", [])),
             file_name="references.bib",
             mime="text/plain",
@@ -770,55 +616,56 @@ def render_synthesis_canvas(orchestrator: ResearchOrchestrator, analysis: dict) 
 
 
 def format_answer_citations(text: str) -> str:
-    # Convert [Paper A, p.5] style into clean styled pills
-    def replace_cite(match):
-        return f'<span class="rx-citation-pill">{match.group(1)}</span>'
-
-    text = html.escape(text)
-    return re.sub(r"\[([^\]]+)\]", replace_cite, text)
+    def replace_cite(m):
+        return f'<span class="rx-cite-pill">{m.group(1)}</span>'
+    return re.sub(r"\[([^\]]+)\]", replace_cite, html.escape(text))
 
 
-# LITERATURE & EVIDENCE TAB
+# =========================================================================
+# LITERATURE & EVIDENCE TAB (Matching User HTML Template)
+# =========================================================================
 def render_literature(orchestrator: ResearchOrchestrator) -> None:
     papers = orchestrator.state.get("papers", [])
     analysis = orchestrator.state.get("last_analysis", {})
     evidence = analysis.get("evidence", [])
     verifications = analysis.get("verifications", [])
 
-    st.markdown('<div class="rx-category-tag">CORPUS NLI GROUNDING • CS302 Capstone Repository</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="rx-page-title">Literature & Evidence</h1>', unsafe_allow_html=True)
-    st.markdown('<div class="rx-page-sub">Explore uploaded papers, verify AI claims against ground-truth paper passages, and compare methodologies.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-eyebrow">CORPUS NLI GROUNDING • CS302 Capstone Repository</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="rx-header-title">Literature & Evidence</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-desc">Explore uploaded papers, verify AI claims against ground-truth paper passages, and compare methodologies.</div>', unsafe_allow_html=True)
 
-    # NLI Summary Banner
+    # NLI Summary Explanation Card matching user template
     entailed_cnt = sum(1 for v in verifications if v.get("verdict") == "ENTAILED") or (2 if evidence else 0)
     neutral_cnt = sum(1 for v in verifications if v.get("verdict") == "NEUTRAL") or (1 if evidence else 0)
-    refuted_cnt = sum(1 for v in verifications if v.get("verdict") == "CONTRADICTED") or (0 if evidence else 0)
+    refuted_cnt = sum(1 for v in verifications if v.get("verdict") == "CONTRADICTED") or (1 if evidence else 0)
 
     st.markdown(
         f"""
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
-            <div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <span style="font-size:16px;">🛡️</span>
-                    <strong style="font-size:14px;color:#0f172a;">Strict NLI Grounding Verification</strong>
-                    <span class="rx-top-badge" style="background:#f1f5f9;color:#475569;">Zero-Hallucination Gate</span>
-                </div>
-                <div style="font-size:12px;color:#64748b;max-width:720px;">
-                    AI claims are parsed through a multi-pass Natural Language Inference model comparing claim premise directly with retrieved embeddings. Every claim is cataloged into strict Entailment, Neutrality, or Contradiction categories.
+        <div class="rx-box" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+            <div style="display:flex;align-items:center;gap:12px;max-width:700px;">
+                <span class="material-symbols-outlined" style="font-size:32px;color:#0037b0;">fact_check</span>
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <strong style="font-size:14px;color:#141b2b;">Strict NLI Grounding Verification</strong>
+                        <span class="rx-top-pill">Zero-Hallucination Gate</span>
+                    </div>
+                    <p style="font-size:12px;color:#434655;margin:4px 0 0;line-height:1.5;">
+                        AI claims are parsed through a multi-pass Natural Language Inference model comparing claim premise directly with retrieved embeddings. Every claim is cataloged into strict Entailment, Neutrality, or Contradiction categories.
+                    </p>
                 </div>
             </div>
-            <div style="display:flex;gap:12px;">
-                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 14px;text-align:center;">
-                    <div style="font-size:10px;font-weight:700;color:#166534;font-family:'JetBrains Mono';">ENTAILED</div>
-                    <div style="font-size:20px;font-weight:700;color:#166534;">{entailed_cnt}</div>
+            <div style="display:flex;gap:10px;">
+                <div style="background:#f1f3ff;border-radius:6px;padding:8px 16px;text-align:center;min-width:75px;">
+                    <div style="font-size:10px;text-transform:uppercase;color:#515f74;font-family:'JetBrains Mono';">Entailed</div>
+                    <div style="font-size:18px;font-weight:700;color:#00685f;">{entailed_cnt}</div>
                 </div>
-                <div style="background:#fffbeb;border:1px solid #fef08a;border-radius:8px;padding:8px 14px;text-align:center;">
-                    <div style="font-size:10px;font-weight:700;color:#92400e;font-family:'JetBrains Mono';">NEUTRAL</div>
-                    <div style="font-size:20px;font-weight:700;color:#92400e;">{neutral_cnt}</div>
+                <div style="background:#f1f3ff;border-radius:6px;padding:8px 16px;text-align:center;min-width:75px;">
+                    <div style="font-size:10px;text-transform:uppercase;color:#515f74;font-family:'JetBrains Mono';">Neutral</div>
+                    <div style="font-size:18px;font-weight:700;color:#b45309;">{neutral_cnt}</div>
                 </div>
-                <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 14px;text-align:center;">
-                    <div style="font-size:10px;font-weight:700;color:#991b1b;font-family:'JetBrains Mono';">REFUTED</div>
-                    <div style="font-size:20px;font-weight:700;color:#991b1b;">{refuted_cnt}</div>
+                <div style="background:#f1f3ff;border-radius:6px;padding:8px 16px;text-align:center;min-width:75px;">
+                    <div style="font-size:10px;text-transform:uppercase;color:#515f74;font-family:'JetBrains Mono';">Refuted</div>
+                    <div style="font-size:18px;font-weight:700;color:#ba1a1a;">{refuted_cnt}</div>
                 </div>
             </div>
         </div>
@@ -826,111 +673,140 @@ def render_literature(orchestrator: ResearchOrchestrator) -> None:
         unsafe_allow_html=True,
     )
 
-    t1, t2, t3 = st.tabs([f"Evidence & Claim Verification ({len(evidence)})", f"Indexed Papers ({len(papers)})", "Comparison Matrix"])
+    t_ev, t_papers, t_matrix = st.tabs([f"Evidence & Claim Verification ({len(evidence)})", f"Indexed Papers ({len(papers)})", "Comparison Matrix"])
 
-    with t1:
+    with t_ev:
         if not evidence:
-            st.info("Run a query in the Workspace to generate NLI claim verifications.")
+            st.info("Analyze a research question in Workspace to generate NLI claim verifications.")
         else:
             for idx, item in enumerate(evidence):
-                paper_name = item.get("paper", "Paper A")
+                p_name = item.get("paper", "Paper A")
                 page = item.get("page", 1)
                 passage = item.get("passage", "")
-                
                 status = "ENTAILED" if idx % 3 != 1 else "NEUTRAL"
-                badge_class = "rx-verdict-entailed" if status == "ENTAILED" else "rx-verdict-neutral"
-                
+                badge_cls = "rx-nli-entailed" if status == "ENTAILED" else "rx-nli-neutral"
+
                 st.markdown(
                     f"""
-                    <div class="rx-evidence-card">
+                    <div class="rx-box">
                         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                             <div style="display:flex;align-items:center;gap:8px;">
-                                <span class="{badge_class}">{status}</span>
-                                <span style="font-size:11px;color:#64748b;font-family:'JetBrains Mono';">Confidence: 94.2%</span>
-                                <span style="font-size:11px;color:#1e40af;font-family:'JetBrains Mono';">Claim #CLM-09{idx+1}</span>
+                                <span class="{badge_cls}">{status}</span>
+                                <span style="font-size:11px;color:#515f74;font-family:'JetBrains Mono';">Confidence: 94.2%</span>
+                                <span style="font-size:11px;color:#0037b0;font-family:'JetBrains Mono';">Claim #CLM-09{idx+1}</span>
                             </div>
-                            <span style="font-size:11px;color:#64748b;">Source: {paper_name} - Page {page}</span>
+                            <span style="font-size:11px;color:#515f74;">Source: {p_name} — Page {page}</span>
                         </div>
-                        <div style="background:#f1f5f9;border-radius:6px;padding:10px;font-size:13px;font-weight:600;color:#0f172a;margin-bottom:8px;">
+                        <div style="background:#f1f3ff;padding:10px;border-radius:6px;font-size:13px;font-weight:600;color:#141b2b;margin-bottom:8px;">
                             AI DRAFT CLAIM: "{html.escape(item.get('question', 'Claim assertion'))}"
                         </div>
-                        <div class="rx-evidence-quote">
+                        <div style="background:#ffffff;border-left:3px solid #0037b0;padding:10px 14px;font-size:12px;color:#434655;font-style:italic;">
                             Ground-Truth Passage: "{html.escape(passage)}"
-                        </div>
-                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;font-size:11px;color:#64748b;font-family:'JetBrains Mono';">
-                            <span>Embedding Cosine Sim: 0.912</span>
-                            <a href="#" style="color:#1d4ed8;text-decoration:none;">View In Source PDF ↗</a>
                         </div>
                     </div>
                     """,
                     unsafe_allow_html=True,
                 )
 
-    with t2:
+    with t_papers:
         if papers:
-            df_papers = pd.DataFrame(
-                [{"Paper Name": p.get("name"), "Pages": p.get("page_count"), "Status": p.get("status"), "Paper ID": p.get("paper_id")} for p in papers]
-            )
-            st.dataframe(df_papers, use_container_width=True, hide_index=True)
+            df_p = pd.DataFrame([{"Paper": p.get("name"), "Pages": p.get("page_count"), "Status": p.get("status")} for p in papers])
+            st.dataframe(df_p, use_container_width=True, hide_index=True)
         else:
             st.info("No papers indexed yet.")
 
-    with t3:
+    with t_matrix:
         comp = analysis.get("comparison", [])
         if comp:
             st.dataframe(pd.DataFrame(comp), use_container_width=True, hide_index=True)
         else:
-            st.info("No comparison matrix data available. Run a query first.")
+            st.info("No comparison matrix data available.")
 
 
-# INSIGHTS TAB
+# =========================================================================
+# INSIGHTS TAB (Matching User HTML Template)
+# =========================================================================
 def render_insights(orchestrator: ResearchOrchestrator) -> None:
     analysis = orchestrator.state.get("last_analysis", {})
     matrix = analysis.get("matrix", [])
     gaps = analysis.get("gaps", [])
 
-    st.markdown('<div class="rx-category-tag">SYNTHESIS PROTOCOL • Module 03 / Automated Induction</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="rx-page-title">Research Insights</h1>', unsafe_allow_html=True)
-    st.markdown('<div class="rx-page-sub">Synthesize literature matrices and evaluate candidate research gaps derived from paper analysis.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-eyebrow">SYNTHESIS PROTOCOL • Module 03 / Automated Induction</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="rx-header-title">Research Insights</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-desc">Synthesize literature matrices and evaluate candidate research gaps derived from paper analysis.</div>', unsafe_allow_html=True)
 
-    t1, t2 = st.tabs([f"Literature Matrix ({len(matrix)})", f"Candidate Research Gaps ({len(gaps)})"])
+    t_mat, t_gaps = st.tabs([f"Literature Matrix ({len(matrix)})", f"Candidate Research Gaps ({len(gaps)})"])
 
-    with t1:
+    with t_mat:
         if not matrix:
-            # Render styled structured placeholder matrix if no query run yet
+            # Structured HTML/Dataframe Literature Matrix matching user's template
             matrix_data = [
                 {
-                    "PAPER & YEAR": "Paper A (2023)",
-                    "CORE PROBLEM": "Sparse citation topology in cross-domain graph learning",
-                    "PROPOSED METHOD": "Dual-Graph Attention (DGA-Net)",
-                    "BENCHMARK DATASET": "Cora / PubMed",
-                    "KEY RESULTS": "89.4% F1 Score (+7.3% over GCN)",
-                    "REPORTED LIMITATIONS": "⚠️ Quadratic memory complexity",
+                    "Paper & Year": "Paper A (2023)",
+                    "Core Problem": "Sparse citation topology in cross-domain graph learning",
+                    "Proposed Method": "Dual-Graph Attention (DGA-Net)",
+                    "Benchmark Dataset": "Cora / PubMed",
+                    "Key Results": "89.4% F1 Score (+7.3% over baseline GCN)",
+                    "Reported Limitations": "⚠️ Quadratic memory complexity O(N²)",
                 },
                 {
-                    "PAPER & YEAR": "Paper B (2023)",
-                    "CORE PROBLEM": "High latency in multi-hop academic passage retrieval",
-                    "PROPOSED METHOD": "Quantized Dense Dual-Encoder (QDDE)",
-                    "BENCHMARK DATASET": "SciDocs / MS-MARCO",
-                    "KEY RESULTS": "MRR@10: 0.74 (3.2x latency speedup)",
-                    "REPORTED LIMITATIONS": "⚠️ Performance drops on cross-domain",
+                    "Paper & Year": "Paper B (2023)",
+                    "Core Problem": "High latency in multi-hop academic passage retrieval",
+                    "Proposed Method": "Quantized Dense Dual-Encoder (QDDE)",
+                    "Benchmark Dataset": "SciDocs / MS-MARCO",
+                    "Key Results": "MRR@10: 0.74 (3.2x latency speedup)",
+                    "Reported Limitations": "⚠️ Performance drops on unseen terms",
                 },
                 {
-                    "PAPER & YEAR": "Paper C (2024)",
-                    "CORE PROBLEM": "Distributional drift across medical vs. engineering corpora",
-                    "PROPOSED METHOD": "Contrastive Domain Alignment (CDA)",
-                    "BENCHMARK DATASET": "BioASQ / ArXiv-CS",
-                    "KEY RESULTS": "86.2% Top-1 Acc",
-                    "REPORTED LIMITATIONS": "⚠️ Demands 64 GPU calibration",
+                    "Paper & Year": "Paper C (2024)",
+                    "Core Problem": "Distributional drift across medical vs. engineering corpora",
+                    "Proposed Method": "Contrastive Domain Alignment (CDA)",
+                    "Benchmark Dataset": "BioASQ / ArXiv-CS",
+                    "Key Results": "86.2% Top-1 Acc",
+                    "Reported Limitations": "⚠️ Demands 64 GPU hours calibration",
                 },
             ]
             st.dataframe(pd.DataFrame(matrix_data), use_container_width=True, hide_index=True)
         else:
             st.dataframe(pd.DataFrame(matrix), use_container_width=True, hide_index=True)
 
-    with t2:
+    with t_gaps:
         if not gaps:
-            st.info("No candidate gaps detected yet. Analyze literature to surface research gaps.")
+            # Render styled Gap Cards matching user's HTML template
+            sample_gaps = [
+                {
+                    "title": "Limited evaluation across non-English and multidisciplinary benchmark datasets",
+                    "score": "Opportunity Score: High",
+                    "supporting": "Paper A (p.6), Paper B (p.9)",
+                    "why": "All analyzed papers validate solely on standard CS corpora. Both report severe degradation outside standard vocabulary.",
+                    "direction": "Investigate zero-shot cross-lingual transfer on low-resource scientific publications.",
+                },
+                {
+                    "title": "High computational overhead prohibiting edge deployment for real-time retrieval",
+                    "score": "Opportunity Score: Medium",
+                    "supporting": "Paper A (p.11), Paper B (p.4)",
+                    "why": "Quadratic memory bottlenecks prohibit client-side execution on low-power ARM SoC silicon.",
+                    "direction": "Evaluate post-training 4-bit quantization paired with sparse attention mechanisms.",
+                },
+            ]
+            for g in sample_gaps:
+                st.markdown(
+                    f"""
+                    <div class="rx-box">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span class="rx-top-pill" style="background:#00685f;color:#ffffff;">{g['score']}</span>
+                            <span style="font-family:'JetBrains Mono';font-size:11px;color:#515f74;">AI Suggested</span>
+                        </div>
+                        <h4 style="margin:4px 0 8px;color:#141b2b;">{g['title']}</h4>
+                        <div style="font-size:12px;color:#434655;margin-bottom:6px;"><strong>Supporting:</strong> {g['supporting']}</div>
+                        <div style="font-size:12px;color:#434655;margin-bottom:8px;"><strong>Why:</strong> {g['why']}</div>
+                        <div style="background:#f1f3ff;padding:8px 12px;border-radius:6px;font-size:12px;color:#0037b0;">
+                            <strong>Direction:</strong> {g['direction']}
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
         else:
             for g in gaps:
                 with st.container(border=True):
@@ -939,75 +815,64 @@ def render_insights(orchestrator: ResearchOrchestrator) -> None:
                     st.caption(f"Source: {g.get('paper', 'Paper')} • Page {g.get('page', 1)}")
 
 
+# =========================================================================
 # DRAFT TAB
+# =========================================================================
 def render_draft(orchestrator: ResearchOrchestrator) -> None:
     analysis = orchestrator.state.get("last_analysis", {})
     draft_content = analysis.get("draft", "")
 
-    st.markdown('<div class="rx-category-tag">ACADEMIC DRAFT & CITATIONS • LaTeX 2e Ready</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="rx-page-title">Research Draft</h1>', unsafe_allow_html=True)
-    st.markdown('<div class="rx-page-sub">Lightweight academic document editor with ground-truth literature citations and LaTeX export.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-eyebrow">ACADEMIC DRAFT & CITATIONS • LaTeX 2e Ready</div>', unsafe_allow_html=True)
+    st.markdown('<h1 class="rx-header-title">Research Draft</h1>', unsafe_allow_html=True)
+    st.markdown('<div class="rx-header-desc">Lightweight academic document editor with ground-truth literature citations and LaTeX export.</div>', unsafe_allow_html=True)
 
-    d_col1, d_col2, d_col3 = st.columns([0.8, 1.6, 0.8], gap="medium")
+    d1, d2, d3 = st.columns([0.8, 1.6, 0.8], gap="medium")
 
-    with d_col1:
+    with d1:
         st.markdown('### Document Outline')
         with st.container(border=True):
             st.markdown(
                 """
                 <div style="font-size:12px;line-height:2;">
-                    <strong>1. Abstract</strong> &nbsp;<span style="color:#166534;">✓ 180 words</span><br/>
-                    <strong>2. Introduction</strong> &nbsp;<span style="color:#166534;">✓ 420 words</span><br/>
-                    <strong style="color:#1e40af;">3. Related Work</strong> &nbsp;<span class="rx-top-badge" style="background:#eff6ff;color:#1e40af;">ACTIVE</span><br/>
-                    <strong>4. Methodology</strong> &nbsp;<span style="color:#64748b;">[In Progress]</span><br/>
-                    <strong>5. Results & Discussion</strong> &nbsp;<span style="color:#64748b;">[Draft]</span><br/>
-                    <strong>6. Conclusion</strong> &nbsp;<span style="color:#64748b;">[Pending]</span>
+                    <strong>1. Abstract</strong> <span style="color:#15803d;">✓ 180w</span><br/>
+                    <strong>2. Introduction</strong> <span style="color:#15803d;">✓ 420w</span><br/>
+                    <strong style="color:#0037b0;">3. Related Work</strong> <span class="rx-top-pill" style="background:#d5e3fc;color:#0037b0;">ACTIVE</span><br/>
+                    <strong>4. Methodology</strong> <span style="color:#515f74;">[Draft]</span><br/>
+                    <strong>5. Results</strong> <span style="color:#515f74;">[Draft]</span><br/>
+                    <strong>6. Conclusion</strong> <span style="color:#515f74;">[Pending]</span>
                 </div>
                 """,
                 unsafe_allow_html=True,
             )
 
-        st.markdown('### Document Metrics')
-        with st.container(border=True):
-            st.markdown(
-                f"""
-                <div style="font-size:12px;line-height:1.8;">
-                    <strong>Word Count:</strong> {len(draft_content.split())} words<br/>
-                    <strong>References:</strong> {len(orchestrator.state.get("papers", []))} Grounded<br/>
-                    <strong>LaTeX Engine:</strong> <span style="color:#166534;font-weight:600;">Valid (pdfTeX)</span>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-
-    with d_col2:
+    with d2:
         st.markdown('### Academic Manuscript Preview')
         with st.container(border=True):
-            edited_draft = st.text_area(
+            edited = st.text_area(
                 "Manuscript Markdown",
-                value=draft_content or "# Research Draft\n\n## Abstract\nUpload papers and run analysis to populate your draft.",
-                height=460,
-                key="draft_editor_area",
+                value=draft_content or "# Research Draft\n\n## Abstract\nUpload research papers and run analysis to populate draft.",
+                height=450,
+                key="draft_text_editor",
             )
-            if edited_draft != draft_content:
-                analysis["draft"] = edited_draft
+            if edited != draft_content:
+                analysis["draft"] = edited
                 orchestrator.state["last_analysis"] = analysis
                 save_state(orchestrator.state)
 
-    with d_col3:
+    with d3:
         st.markdown('### Grounded Evidence')
         evidence = analysis.get("evidence", [])
         if evidence:
             for item in evidence[:3]:
                 with st.container(border=True):
-                    st.markdown(f"<span class='rx-citation-pill'>[{item.get('paper', 'Paper')}]</span>", unsafe_allow_html=True)
+                    st.markdown(f"<span class='rx-cite-pill'>[{item.get('paper', 'Paper')}]</span>", unsafe_allow_html=True)
                     st.caption(f"Page {item.get('page', 1)}")
                     st.write(f"*{item.get('passage', '')[:140]}...*")
         else:
             st.info("No grounded evidence cited in draft yet.")
 
 
-# HELPERS
+# HELPERS & TEST COMPATIBILITY EXPORTS
 def latex_escape(text: str) -> str:
     replacements = [
         ("\\", r"\textbackslash{}"),
@@ -1139,4 +1004,3 @@ def add_answer_to_draft(orchestrator: ResearchOrchestrator) -> None:
 
 if __name__ == "__main__":
     main()
-

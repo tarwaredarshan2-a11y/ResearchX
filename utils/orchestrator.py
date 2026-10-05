@@ -79,12 +79,16 @@ class ResearchOrchestrator:
         self.bm25 = BM25Retriever(self.dense.load_all_records())
         self.hybrid = HybridRetriever(self.dense, self.bm25)
 
-        # 5. Clean up last analysis if empty or affected
-        if not self.state["papers"]:
-            self.state["last_analysis"] = {}
+        # 5. Reset last analysis so lingering output from deleted files disappears
+        self.state["last_analysis"] = {}
 
         save_state(self.state)
         return True
+
+    def clear_analysis(self) -> None:
+        self.state["last_analysis"] = {}
+        save_state(self.state)
+
 
     def analyze(self, question: str, paper_ids: list[str] | None = None) -> dict[str, Any]:
         if not self.state.get("papers"):
