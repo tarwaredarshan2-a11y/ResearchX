@@ -44,8 +44,8 @@ class HybridRetriever:
         self.dense = dense
         self.bm25 = bm25
 
-    def search(self, query: str, top_k: int = TOP_K) -> dict[str, list[SearchResult]]:
-        dense_results = self.dense.search(query, top_k=top_k)
-        sparse_results = self.bm25.search(query, top_k=top_k)
+    def search(self, query: str, top_k: int = TOP_K, paper_ids: list[str] | None = None) -> dict[str, list[SearchResult]]:
+        dense_results = self.dense.search(query, top_k=top_k, paper_ids=paper_ids)
+        sparse_results = self.bm25.search(query, top_k=top_k, paper_ids=paper_ids)
         hybrid_results = weighted_rrf(dense_results, sparse_results, top_k=top_k)
         return {"dense": dense_results, "bm25": sparse_results, "hybrid": hybrid_results}

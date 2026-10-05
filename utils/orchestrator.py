@@ -51,13 +51,48 @@ class ResearchOrchestrator:
         save_state(self.state)
         return processed
 
-    def analyze(self, question: str) -> dict[str, Any]:
+    def delete_paper(self, paper_id: str) -> bool:
+        paper_to_delete = None
+        for paper in self.state.get("papers", []):
+            if paper.get("paper_id") == paper_id:
+                paper_to_delete = paper
+                break
+        if not paper_to_delete:
+            return False
+
+        # 1. Delete chunks from Vector DB
+        self.dense.delete_paper_chunks(paper_id)
+
+        # 2. Delete source file from uploads/ if it exists
+        if paper_to_delete.get("path"):
+            file_path = Path(paper_to_delete["path"])
+            if file_path.is_file():
+                try:
+                    file_path.unlink()
+                except Exception:
+                    pass
+
+        # 3. Remove paper record from state
+        self.state["papers"] = [p for p in self.state["papers"] if p.get("paper_id") != paper_id]
+
+        # 4. Re-index retrievers
+        self.bm25 = BM25Retriever(self.dense.load_all_records())
+        self.hybrid = HybridRetriever(self.dense, self.bm25)
+
+        # 5. Clean up last analysis if empty or affected
+        if not self.state["papers"]:
+            self.state["last_analysis"] = {}
+
+        save_state(self.state)
+        return True
+
+    def analyze(self, question: str, paper_ids: list[str] | None = None) -> dict[str, Any]:
         if not self.state.get("papers"):
             return {"error": "No research papers yet. Upload PDF papers to begin."}
         if not question.strip():
             return {"error": "Enter a research question."}
 
-        retrieval = self.hybrid.search(question, top_k=TOP_K)
+        retrieval = self.hybrid.search(question, top_k=TOP_K, paper_ids=paper_ids)
         evidence = make_evidence_records(question, retrieval["hybrid"])
         verifications = verify_claim(question, evidence)
         for record, verification in zip(evidence, verifications):
@@ -80,9 +115,11 @@ class ResearchOrchestrator:
             "matrix_summary": matrix_summary,
             "gaps": gaps,
             "draft": draft,
+            "paper_scope": paper_ids,
         }
         save_state(self.state)
         return self.state["last_analysis"]
+
 
     def _answer(self, question: str, evidence: list[EvidenceRecord]) -> str:
         if not evidence:

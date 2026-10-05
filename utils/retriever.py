@@ -47,13 +47,17 @@ class BM25Retriever:
             self.doc_freq.update(set(tokens))
         self.avgdl = sum(len(tokens) for tokens in self.doc_tokens) / max(len(self.doc_tokens), 1)
 
-    def search(self, query: str, top_k: int = TOP_K) -> list[SearchResult]:
+    def search(self, query: str, top_k: int = TOP_K, paper_ids: list[str] | None = None) -> list[SearchResult]:
         if not self.documents:
             return []
         query_terms = tokenize(query)
         scores: list[tuple[int, float]] = []
         total_docs = len(self.documents)
+        filter_set = set(paper_ids) if paper_ids else None
         for index, tokens in enumerate(self.doc_tokens):
+            doc = self.documents[index]
+            if filter_set and doc.get("metadata", {}).get("paper_id") not in filter_set:
+                continue
             counts = Counter(tokens)
             score = 0.0
             doc_len = len(tokens) or 1
@@ -114,17 +118,53 @@ class DenseRetriever:
             embeddings=[embedding for _, embedding in new_records],
         )
 
-    def search(self, query: str, top_k: int = TOP_K) -> list[SearchResult]:
+    def delete_paper_chunks(self, paper_id: str) -> None:
+        collection = self._get_collection()
+        try:
+            collection.delete(where={"paper_id": paper_id})
+        except Exception:
+            data = collection.get()
+            ids_to_del = [
+                cid for cid, meta in zip(data.get("ids", []), data.get("metadatas", []))
+                if (meta or {}).get("paper_id") == paper_id
+            ]
+            if ids_to_del:
+                collection.delete(ids=ids_to_del)
+
+    def search(self, query: str, top_k: int = TOP_K, paper_ids: list[str] | None = None) -> list[SearchResult]:
         collection = self._get_collection()
         query_embedding = self.embedding_model.embed([query])[0]
-        response = collection.query(query_embeddings=[query_embedding], n_results=top_k)
+        
+        where_filter = None
+        if paper_ids:
+            if len(paper_ids) == 1:
+                where_filter = {"paper_id": paper_ids[0]}
+            else:
+                where_filter = {"paper_id": {"$in": paper_ids}}
+
+        try:
+            response = collection.query(
+                query_embeddings=[query_embedding],
+                n_results=top_k,
+                where=where_filter,
+            )
+        except Exception:
+            # Fallback if where query fails or is empty
+            response = collection.query(query_embeddings=[query_embedding], n_results=top_k * 3)
+
         ids = response.get("ids", [[]])[0]
         docs = response.get("documents", [[]])[0]
         metadatas = response.get("metadatas", [[]])[0]
         distances = response.get("distances", [[]])[0] if response.get("distances") else [0.0] * len(ids)
         results = []
+        filter_set = set(paper_ids) if paper_ids else None
         for rank, (chunk_id, doc, metadata, distance) in enumerate(zip(ids, docs, metadatas, distances), start=1):
-            results.append(SearchResult(chunk_id, doc, metadata or {}, 1.0 / (1.0 + float(distance)), rank, "dense"))
+            meta = metadata or {}
+            if filter_set and meta.get("paper_id") not in filter_set:
+                continue
+            results.append(SearchResult(chunk_id, doc, meta, 1.0 / (1.0 + float(distance)), rank, "dense"))
+            if len(results) >= top_k:
+                break
         return results
 
     def load_all_records(self) -> list[dict]:
@@ -134,3 +174,4 @@ class DenseRetriever:
         for chunk_id, document, metadata in zip(data.get("ids", []), data.get("documents", []), data.get("metadatas", [])):
             records.append({"id": chunk_id, "text": document, "metadata": metadata or {}})
         return records
+
