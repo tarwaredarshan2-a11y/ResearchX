@@ -109,29 +109,45 @@ st.markdown(
         color: var(--secondary);
     }
 
-    /* Styled Radio Navigation Buttons in Sidebar */
+    /* Hide Streamlit Native Radio Circles in Sidebar */
+    [data-testid="stSidebar"] [data-testid="stRadio"] label > div:first-child {
+        display: none !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+        display: none !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] {
+        gap: 4px !important;
+    }
     [data-testid="stSidebar"] [data-testid="stRadio"] label {
-        padding: 0.55rem 0.75rem !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 10px 14px !important;
         border-radius: 6px !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
         font-weight: 500 !important;
         color: #434655 !important;
+        cursor: pointer !important;
         transition: all 0.15s ease !important;
-        margin-bottom: 3px !important;
+        background: transparent !important;
+        border: none !important;
+        width: 100% !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
-        background: #e9edff !important;
-        color: #141b2b !important;
+        background: #f1f5f9 !important;
+        color: #0f172a !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] {
         background: #0037b0 !important;
         color: #ffffff !important;
         font-weight: 600 !important;
-        box-shadow: 0 2px 4px rgba(0, 55, 176, 0.25) !important;
+        box-shadow: 0 3px 8px rgba(0, 55, 176, 0.3) !important;
     }
-    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p {
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p,
+    [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] span {
         color: #ffffff !important;
     }
+
 
     /* Material Symbols Font Rule */
     .material-symbols-outlined {
@@ -285,14 +301,16 @@ def main() -> None:
         st.markdown(
             """
             <div class="rx-sidebar-brand">
-                <div class="rx-brand-logo">RC</div>
+                <div class="rx-brand-logo" style="background:#0037b0;border-radius:8px;width:36px;height:36px;display:grid;place-items:center;">
+                    <span class="material-symbols-outlined" style="color:#ffffff;font-size:20px;">assignment_turned_in</span>
+                </div>
                 <div>
-                    <div class="rx-brand-text">ResearchCopilotAI</div>
-                    <div class="rx-brand-sub">3rd Year B.Tech Project</div>
+                    <div class="rx-brand-text" style="font-weight:700;font-size:15px;color:#141b2b;">ResearchCopilotAI</div>
+                    <div class="rx-brand-sub" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#515f74;">3rd Year B.Tech Project</div>
                 </div>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#515f74;font-weight:600;letter-spacing:0.08em;margin-bottom:8px;text-transform:uppercase;">
-                Navigation
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#515f74;font-weight:600;letter-spacing:0.12em;margin:16px 0 8px;text-transform:uppercase;">
+                NAVIGATION
             </div>
             """,
             unsafe_allow_html=True,
@@ -306,10 +324,11 @@ def main() -> None:
             format_func=lambda value: {
                 "Workspace": "🔍   Workspace",
                 "Literature": "📖   Literature",
-                "Insights": "📊   Insights",
+                "Insights": "📈   Insights",
                 "Draft": "✍️   Draft",
             }[value],
         )
+
 
         st.divider()
 
