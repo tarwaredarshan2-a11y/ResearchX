@@ -21,12 +21,15 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Comprehensive Styling Injection matching the User's Provided HTML/Tailwind Design System
+# 1. Clean HTML Head Injection for Fonts & Material Symbols
 st.markdown(
-    """
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <style>
+    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=JetBrains+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">',
+    unsafe_allow_html=True,
+)
+
+# 2. Pure CSS Block Injection (Starting immediately with <style> so Streamlit never escapes it as text)
+st.markdown(
+    """<style>
     :root {
         --primary: #0037b0;
         --primary-container: #1d4ed8;
@@ -44,34 +47,35 @@ st.markdown(
         --error-bg: #ffdad6;
     }
 
+    /* Global Page Override */
     html, body, [class*="css"], [data-testid="stAppViewContainer"] {
-        font-family: 'Inter', sans-serif;
-        color: var(--on-surface);
-        background-color: var(--background);
+        font-family: 'Inter', sans-serif !important;
+        color: var(--on-surface) !important;
+        background-color: var(--background) !important;
     }
-    .stApp { background-color: var(--background); }
+    .stApp { background-color: var(--background) !important; }
 
     [data-testid="stMainBlockContainer"] {
-        max-width: 1400px;
-        padding: 1rem 2rem 4rem;
-        margin: 0 auto;
+        max-width: 1400px !important;
+        padding: 1rem 2rem 4rem !important;
+        margin: 0 auto !important;
     }
 
     /* Fixed Top Header */
     header[data-testid="stHeader"] {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(196, 197, 215, 0.4);
-        height: 60px;
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        border-bottom: 1px solid rgba(196, 197, 215, 0.4) !important;
+        height: 60px !important;
     }
 
-    /* Sidebar Customization matching HTML aside template */
+    /* Sidebar Customization */
     section[data-testid="stSidebar"] {
-        background-color: #ffffff;
-        border-right: 1px solid rgba(196, 197, 215, 0.5);
+        background-color: #ffffff !important;
+        border-right: 1px solid rgba(196, 197, 215, 0.5) !important;
     }
     section[data-testid="stSidebar"] > div {
-        padding: 1.25rem 1rem 1rem;
+        padding: 1.25rem 1rem 1rem !important;
     }
 
     .rx-sidebar-brand {
@@ -107,26 +111,42 @@ st.markdown(
 
     /* Styled Radio Navigation Buttons in Sidebar */
     [data-testid="stSidebar"] [data-testid="stRadio"] label {
-        padding: 0.55rem 0.75rem;
-        border-radius: 6px;
-        font-size: 13px;
-        font-weight: 500;
-        color: #434655;
-        transition: all 0.15s ease;
-        margin-bottom: 3px;
+        padding: 0.55rem 0.75rem !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #434655 !important;
+        transition: all 0.15s ease !important;
+        margin-bottom: 3px !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
-        background: #e9edff;
-        color: #141b2b;
+        background: #e9edff !important;
+        color: #141b2b !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] {
         background: #0037b0 !important;
         color: #ffffff !important;
-        font-weight: 600;
-        box-shadow: 0 2px 4px rgba(0, 55, 176, 0.25);
+        font-weight: 600 !important;
+        box-shadow: 0 2px 4px rgba(0, 55, 176, 0.25) !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label[data-checked="true"] p {
         color: #ffffff !important;
+    }
+
+    /* Material Symbols Font Rule */
+    .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined' !important;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 20px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-smoothing: antialiased;
     }
 
     /* Top Bar Banner */
@@ -185,26 +205,6 @@ st.markdown(
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
 
-    /* Metric Badges */
-    .rx-metric-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #ffffff;
-        border: 1px solid rgba(196, 197, 215, 0.5);
-        padding: 6px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        color: #141b2b;
-    }
-    .rx-pulse-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #00685f;
-        box-shadow: 0 0 0 2px rgba(0, 104, 95, 0.2);
-    }
-
     /* Citation Pills */
     .rx-cite-pill {
         background: #d5e3fc;
@@ -250,28 +250,23 @@ st.markdown(
         text-transform: uppercase;
     }
 
-    /* Primary & Action Buttons */
+    /* Buttons */
     div.stButton > button {
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 13px;
-        transition: all 0.15s ease;
+        border-radius: 6px !important;
+        font-weight: 500 !important;
+        font-size: 13px !important;
+        transition: all 0.15s ease !important;
     }
     div.stButton > button[kind="primary"] {
-        background: #0037b0;
-        border-color: #0037b0;
-        color: #ffffff;
+        background: #0037b0 !important;
+        border-color: #0037b0 !important;
+        color: #ffffff !important;
     }
     div.stButton > button[kind="primary"]:hover {
-        background: #1d4ed8;
-        border-color: #1d4ed8;
+        background: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
     }
-
-    @media (max-width: 900px) {
-        [data-testid="stMainBlockContainer"] { padding: 1rem 0.75rem 3rem; }
-    }
-    </style>
-    """,
+    </style>""",
     unsafe_allow_html=True,
 )
 
@@ -285,7 +280,7 @@ def main() -> None:
     orchestrator = get_orchestrator()
     papers = orchestrator.state.get("papers", [])
 
-    # Sidebar Navigation matching the User's HTML Aside Design
+    # Sidebar Navigation matching user's HTML Aside template
     with st.sidebar:
         st.markdown(
             """
@@ -340,7 +335,7 @@ def main() -> None:
         st.markdown(
             f"""
             <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#141b2b;">
-                <span class="rx-pulse-dot"></span> System Ready
+                <span style="width:7px;height:7px;border-radius:50%;background:#00685f;display:inline-block;"></span> System Ready
             </div>
             <div style="font-size:10px;color:#515f74;margin-top:4px;">
                 CS302 Project • Grounded RAG
@@ -391,7 +386,6 @@ def render_workspace(orchestrator: ResearchOrchestrator) -> None:
     papers = orchestrator.state.get("papers", [])
     analysis = orchestrator.state.get("last_analysis", {})
 
-    # Top Workspace Header
     col_hdr, col_status = st.columns([3, 1])
     with col_hdr:
         st.markdown('<div class="rx-header-eyebrow">SYNTHESIS PROTOCOL • Module 01 / Automated Induction</div>', unsafe_allow_html=True)
@@ -402,10 +396,9 @@ def render_workspace(orchestrator: ResearchOrchestrator) -> None:
         st.markdown(
             f"""
             <div style="text-align:right;margin-top:8px;">
-                <div class="rx-metric-badge">
-                    <span class="rx-pulse-dot"></span>
-                    <strong>{len(papers)} Papers</strong> • <span>{total_chunks} Chunks</span>
-                </div>
+                <span class="rx-top-pill" style="background:#ffffff;border:1px solid #c4c5d7;">
+                    📖 <strong>{len(papers)} Papers</strong> • <span>{total_chunks} Chunks</span>
+                </span>
             </div>
             """,
             unsafe_allow_html=True,
